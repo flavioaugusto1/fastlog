@@ -1,14 +1,59 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+    customer
+    sale
+}
+
+enum DeliveryStatus {
+    processing
+    shipped
+    delivered
+}
+
+model User {
+    id         String     @id @default(uuid())
+    name       String
+    email      String     @unique
+    role       UserRole   @default(customer)
+    password   String
+    createdAt  DateTime   @default(now()) @map("created_at")
+    updatedAt  DateTime   @updatedAt @map("updated_at")
+    Deliveries Delivery[]
+
+    @@map("users")
+}
+
+model Delivery {
+    id          String         @id @default(uuid())
+    description String
+    status      DeliveryStatus @default(processing)
+    createdAt   DateTime       @default(now()) @map("created_at")
+    updatedAt   DateTime       @updatedAt @map("updated_at")
+    userId      String         @map("user_id")
+
+    DeliveryLog DeliveryLog[]
+    user_id     User          @relation(fields: [userId], references: [id])
+
+    @@map("deliveries")
+}
+
+model DeliveryLog {
+    id          String @id @default(uuid())
+    deliveryId  String @map("delivery_id")
+    description String
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    delivery Delivery @relation(fields: [deliveryId], references: [id])
+
+    @@map("delivery_logs")
 }
