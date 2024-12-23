@@ -36,8 +36,10 @@ export class UsersController {
 
         const { password: _, ...userWithoutPassword } = user
 
-        return response
+        response
             .status(201)
             .json({ message: 'Criado com sucesso!', user: userWithoutPassword })
+
+        return
     }
 }
