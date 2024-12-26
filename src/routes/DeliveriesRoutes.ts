@@ -8,5 +8,6 @@ const deliveriesController = new DeliveriesController()
 
 deliviriesRoutes.use(ensureAuthenticated, verifyYserAuthorization(['sale']))
 deliviriesRoutes.post('/', deliveriesController.create)
+deliviriesRoutes.get('/', deliveriesController.index)
 
 export { deliviriesRoutes }
