@@ -39,7 +39,5 @@ export class UsersController {
         response
             .status(201)
             .json({ message: 'Criado com sucesso!', user: userWithoutPassword })
-
-        return
     }
 }
